@@ -13,5 +13,6 @@
     "turbo": "latest"
   },
   "packageManager": "pnpm@8.6.10",
-  "name": "stdy"
+  "name": "stdy",
+  "prettier": "@vercel/style-guide/prettier"
 }
