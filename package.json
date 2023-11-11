@@ -4,7 +4,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "db": "pnpm --filter @stdy/db -- "
   },
   "devDependencies": {
     "eslint": "^8.48.0",
@@ -13,6 +14,5 @@
     "turbo": "latest"
   },
   "packageManager": "pnpm@8.6.10",
-  "name": "stdy",
-  "prettier": "@vercel/style-guide/prettier"
+  "name": "stdy"
 }
