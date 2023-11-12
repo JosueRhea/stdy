@@ -6,13 +6,28 @@ import {
   integer,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
+import { createInsertSchema } from "drizzle-valibot";
+import {
+  email,
+  flatten,
+  minLength,
+  optional,
+  safeParse,
+  string,
+  uuid,
+} from "valibot";
+import { sql } from "drizzle-orm";
 
 export const users = pgTable("user", {
-  id: text("id").notNull().primaryKey(),
+  id: text("id")
+    .notNull()
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
   name: text("name"),
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  password: text("password").notNull(),
 });
 
 export const accounts = pgTable(
@@ -56,3 +71,17 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey(vt.identifier, vt.token),
   })
 );
+
+export const insertUserSchema = createInsertSchema(users, {
+  email: string([email("Please provide a valid email")]),
+  password: string([minLength(6, "Password must be at least 6 characters")]),
+  id: optional(string([uuid("Invalid id")])),
+});
+
+export function validateInsertUser(input: unknown) {
+  const data = safeParse(insertUserSchema, input);
+  if (!data.success) {
+    return { success: data.success, errors: flatten(data.issues).nested };
+  }
+  return data;
+}
